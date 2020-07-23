@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: OrangeLabs-moe/gradle-actions@v5.0-openjdk-14
     - name: Gradle build
-      run: quarker/gradlew build -x test
+      run: gradle build quarker -x test
       
   docker:
     runs-on: ubuntu-latest
