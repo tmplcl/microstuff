@@ -9,11 +9,11 @@ on:
 jobs:
   
   gradle:
-    runs-on: gradle:6.5.1-jdk11
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: OrangeLabs-moe/gradle-actions@v5.0-openjdk-14
     - name: Gradle build
-      run: gradle build quarker -x test
+      run: quarker/gradlew build -x test
       
   docker:
     runs-on: ubuntu-latest
