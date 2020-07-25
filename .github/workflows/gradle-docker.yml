@@ -19,9 +19,9 @@ jobs:
     - run: gu install native-image
     - run: |
         cd quarker
-        gradle clean build -x test -Dquarkus.package.type=native
+        mvnw package -x test -Dquarkus.package.type=native
         
-  build_container:
+  docker_build_push:
       runs-on: ubuntu-latest
       steps:
         - uses: docker/build-push-action@v1.1.0
@@ -29,8 +29,7 @@ jobs:
             username: tmplcl
             password: ${{ secrets.DOCKERHUB }}
             repository: tmplcl/microstuff
-            dockerfile: src/main/docker/Dockerfile.native
-            tags: microstuff/quarker
+            dockerfile: quarker/src/main/docker/Dockerfile.native
             path: quarker
           
           
