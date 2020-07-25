@@ -17,21 +17,18 @@ jobs:
         graalvm-version: '20.1.0.java11'
     - run: java -version
     - run: gu install native-image
-    - run: |
-        cd quarker
-        ./mvnw package -x test -Dquarkus.package.type=native
-        
+    - run: quarker/mvnw package -DskipTests -Dnative -Dquarkus.native.container-build=true
+    outputs:
+      mvn_target: quarker/target 
+
   docker_build_push:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: docker/build-push-action@v1.1.0
-          with:
-            username: tmplcl
-            password: ${{ secrets.DOCKERHUB }}
-            repository: tmplcl/microstuff
-            dockerfile: quarker/src/main/docker/Dockerfile.native
-            path: quarker
-          
-          
-      
-      
+    needs: [build_app]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker/build-push-action@v1.1.0
+        with:
+          username: tmplcl
+          password: ${{ secrets.DOCKERHUB }}
+          repository: tmplcl/microstuff
+          dockerfile: quarker/src/main/docker/Dockerfile.native
+          path: quarker
