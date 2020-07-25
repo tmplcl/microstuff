@@ -8,16 +8,15 @@ on:
 
 jobs:
   
-  gradle:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - uses: OrangeLabs-moe/gradle-actions@v5.0-openjdk-14
-    - name: Gradle build
-      run: gradle build quarker -x test
-      
-  docker:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build quarker --file quarker/Dockerfile --tag quarker:$(date +%s)
+    - uses: actions/checkout@latest
+    - uses: DeLaGuardo/setup-graalvm@3
+      with:
+        graalvm-version: '20.1.0.java11'
+    - run: java -version
+    - run: gu install native-image
+    - run: |
+        cd quarker
+        gradle clean build -x test -Dquarkus.package.type=native
