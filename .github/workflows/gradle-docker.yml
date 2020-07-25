@@ -19,7 +19,7 @@ jobs:
     - run: gu install native-image
     - run: |
         cd quarker
-        mvnw package -x test -Dquarkus.package.type=native
+        ./mvnw package -x test -Dquarkus.package.type=native
         
   docker_build_push:
       runs-on: ubuntu-latest
