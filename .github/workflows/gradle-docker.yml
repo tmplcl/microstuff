@@ -15,9 +15,14 @@ jobs:
     - uses: DeLaGuardo/setup-graalvm@3
       with:
         graalvm-version: '20.1.0.java11'
-    - run: java -version
-    - run: gu install native-image
-    - run: quarker/mvnw package -DskipTests -Dnative -Dquarkus.native.container-build=true
+    - name: check java version
+      run: java -version
+    - name: install graalvm native image dependency
+      run: gu install native-image
+    - name: mvn package
+      run: |
+        cd quarker
+        mvn package -DskipTests -Dnative -Dquarkus.native.container-build=true
     outputs:
       mvn_target: quarker/target 
 
