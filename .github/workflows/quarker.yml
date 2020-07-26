@@ -35,10 +35,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          ls
-          ls quarker
-          ls quarker/target
       - uses: actions/download-artifact@v2
         with:
           name: maven_build_target
