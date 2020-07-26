@@ -46,3 +46,4 @@ jobs:
           repository: tmplcl/microstuff
           dockerfile: quarker/src/main/docker/Dockerfile.native
           path: quarker
+          push: true
