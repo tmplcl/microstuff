@@ -6,12 +6,8 @@ on:
   pull_request:
     branches: [ master ]
 
-defaults:
-  run:
-    working-directory: quarker
-
 jobs:
-  
+
   build_app:
     runs-on: ubuntu-latest
     steps:
@@ -24,14 +20,16 @@ jobs:
     - name: install graalvm native image dependency
       run: gu install native-image
     - name: mvn package
-      run: mvn package -DskipTests -Dnative -Dquarkus.native.container-build=true
+      run: |
+        cd quarker
+        mvn package -DskipTests -Dnative
     outputs:
       mvn_target: target
 
   docker_build_push:
     needs: [build_app]
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v2
       - uses: docker/build-push-action@v1.1.0
@@ -39,5 +37,5 @@ jobs:
           username: tmplcl
           password: ${{ secrets.DOCKERHUB }}
           repository: tmplcl/microstuff
-          dockerfile: src/main/docker/Dockerfile.native
-          path: .
+          dockerfile: quarker/src/main/docker/Dockerfile.native
+          path: quarker
