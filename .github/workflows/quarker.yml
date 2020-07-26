@@ -1,0 +1,49 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build_app:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: DeLaGuardo/setup-graalvm@3
+      with:
+        graalvm-version: '20.1.0.java11'
+    - name: check java version
+      run: java -version
+    - name: install graalvm native image dependency
+      run: gu install native-image
+    - name: mvn package
+      run: |
+        cd quarker
+        mvn package -DskipTests -Dnative
+        ls target
+    - uses: actions/upload-artifact@main
+      with:
+        name: maven_build_target
+        path: quarker/target/
+
+  docker_build_push:
+    needs: [build_app]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: maven_build_target
+          path: quarker/target/
+      - uses: docker/build-push-action@v1.1.0
+        with:
+          username: tmplcl
+          password: ${{ secrets.DOCKERHUB }}
+          repository: tmplcl/microstuff
+          dockerfile: quarker/src/main/docker/Dockerfile.native
+          path: quarker
+          push: true
