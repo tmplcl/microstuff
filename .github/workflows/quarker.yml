@@ -24,7 +24,7 @@ jobs:
         cd quarker
         mvn package -DskipTests -Dnative
         ls target
-    - uses: actions/upload-artifact@master
+    - uses: actions/upload-artifact@main
       with:
         name: maven_build_target
         path: quarker/target/
