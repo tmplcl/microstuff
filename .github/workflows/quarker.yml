@@ -23,6 +23,7 @@ jobs:
       run: |
         cd quarker
         mvn package -DskipTests -Dnative
+        ls target
     outputs:
       mvn_target: target
 
@@ -32,6 +33,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - run: |
+          ls
+          ls quarker
+          ls quarker/target
       - uses: docker/build-push-action@v1.1.0
         with:
           username: tmplcl
